@@ -1,7 +1,9 @@
 package com.example.kotlinsecurity.member.controller
 
+import com.example.kotlinsecurity.common.dto.BaseResponse
 import com.example.kotlinsecurity.member.dto.MemberDtoRequest
 import com.example.kotlinsecurity.member.service.MemberService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,8 +18,10 @@ class MemberController(
     /**
      * 회원가입
      */
-    @PostMapping("/signing")
-    fun signUp(@RequestBody memberDtoRequest: MemberDtoRequest): String {
-        return memberService.signUp(memberDtoRequest)
+    @PostMapping("/signup")
+    fun signUp(@RequestBody @Valid memberDtoRequest: MemberDtoRequest): BaseResponse<Unit> {
+        val resultMsg = memberService.signUp(memberDtoRequest)
+
+        return BaseResponse(message = resultMsg)
     }
 }
