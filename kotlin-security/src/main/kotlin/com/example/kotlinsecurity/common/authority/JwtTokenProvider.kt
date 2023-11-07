@@ -1,5 +1,6 @@
 package com.example.kotlinsecurity.common.authority
 
+import com.example.kotlinsecurity.common.dto.CustomUser
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
@@ -35,6 +36,7 @@ class JwtTokenProvider {
         val accessToken = Jwts
             .builder()
             .claim("auth", authorities)
+            .claim("userId", (authentication.principal as CustomUser).userId)
             .subject(authentication.name)
             .issuedAt(now)
             .expiration(accessExpiration)
@@ -50,10 +52,11 @@ class JwtTokenProvider {
     fun getAuthentication(token: String): Authentication {
         val claims: Claims = getClaims(token)
         val auth = claims["auth"] ?: throw RuntimeException("잘못된 토큰입니다.")
+        val userId = claims["userId"] ?: throw RuntimeException("잘못된 id입니다.")
         val authorities: Collection<GrantedAuthority> = (auth as String)
             .split(",")
             .map { SimpleGrantedAuthority(it) }
-        val principal: UserDetails = User(claims.subject, "", authorities)
+        val principal: UserDetails = CustomUser(userId.toString().toLong(), claims.subject, "", authorities)
 
         return UsernamePasswordAuthenticationToken(principal, "", authorities)
     }

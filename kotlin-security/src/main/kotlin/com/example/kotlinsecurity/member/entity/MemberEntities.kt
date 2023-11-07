@@ -2,8 +2,10 @@ package com.example.kotlinsecurity.member.entity
 
 import com.example.kotlinsecurity.common.status.Gender
 import com.example.kotlinsecurity.common.status.Role
+import com.example.kotlinsecurity.member.dto.MemberDtoResponse
 import jakarta.persistence.*
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Entity
 @Table(
@@ -38,6 +40,12 @@ class Member(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     val memberRole: List<MemberRole>? = null
+
+    private fun LocalDate.formatDate(): String =
+        this.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+
+    fun toDto(): MemberDtoResponse =
+        MemberDtoResponse(id!!, loginId, name, birthDate.formatDate(), email, gender.desc)
 }
 
 @Entity

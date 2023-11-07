@@ -1,5 +1,6 @@
-package com.example.kotlinsecurity.member.service
+package com.example.kotlinsecurity.common.service
 
+import com.example.kotlinsecurity.common.dto.CustomUser
 import com.example.kotlinsecurity.member.entity.Member
 import com.example.kotlinsecurity.member.repository.MemberRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -23,7 +24,8 @@ class CustomUserDetailsService(
 
 
     private fun createUserDetails(member: Member): UserDetails =
-        User(
+        CustomUser(
+            member.id!!,
             member.loginId,
             passwordEncoder.encode(member.password),
             member.memberRole!!.map { SimpleGrantedAuthority("ROLE_${it.role}") }

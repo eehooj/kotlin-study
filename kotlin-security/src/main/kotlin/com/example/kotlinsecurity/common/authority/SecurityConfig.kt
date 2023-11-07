@@ -27,8 +27,12 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 //it.requestMatchers("/api/member/signup", "/h2-console/*").anonymous().anyRequest().permitAll()
                 it.requestMatchers(
-                    AntPathRequestMatcher("/api/member/signup", "/h2-console/*"))
-                    .anonymous().anyRequest().permitAll() // 3.X부터 어떤 서블렛 쓸 것인지 명시 필요
+                    AntPathRequestMatcher("/api/member/signup"),
+                    AntPathRequestMatcher( "/h2-console/*"),
+                    AntPathRequestMatcher("/api/member/login")
+                ).anonymous()
+                    .requestMatchers(AntPathRequestMatcher("/api/member/**")).hasRole("MEMBER")
+                    .anyRequest().permitAll() // 3.X부터 어떤 서블렛 쓸 것인지 명시 필요
             }
             .addFilterBefore(
                 JwtAuthenticFilter(jwtTokenProvider),
