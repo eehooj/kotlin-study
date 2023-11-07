@@ -8,6 +8,7 @@ import com.example.kotlinsecurity.member.dto.MemberDtoRequest
 import com.example.kotlinsecurity.member.dto.MemberDtoResponse
 import com.example.kotlinsecurity.member.service.MemberService
 import jakarta.validation.Valid
+import org.springframework.security.access.annotation.Secured
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
@@ -41,6 +42,7 @@ class MemberController(
      * 내 정보 조회
      */
     @GetMapping("/info")
+    @Secured("MEMBER")
     fun searchInfo(): BaseResponse<MemberDtoResponse> {
         return BaseResponse(data = memberService.searchMyInfo(
             (SecurityContextHolder.getContext().authentication.principal as CustomUser).userId))
@@ -50,6 +52,7 @@ class MemberController(
      * 내 정보 수정
      */
     @PutMapping("/info")
+    @Secured("MEMBER")
     fun saveMyInfo(@RequestBody @Valid memberDtoRequest: MemberDtoRequest): BaseResponse<Unit> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userId
         memberDtoRequest.id = userId

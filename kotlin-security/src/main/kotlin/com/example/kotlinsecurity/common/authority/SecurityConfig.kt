@@ -9,7 +9,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
@@ -31,7 +30,6 @@ class SecurityConfig(
                     AntPathRequestMatcher( "/h2-console/*"),
                     AntPathRequestMatcher("/api/member/login")
                 ).anonymous()
-                    .requestMatchers(AntPathRequestMatcher("/api/member/**")).hasRole("MEMBER")
                     .anyRequest().permitAll() // 3.X부터 어떤 서블렛 쓸 것인지 명시 필요
             }
             .addFilterBefore(
