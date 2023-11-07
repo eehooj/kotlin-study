@@ -1,6 +1,7 @@
 package com.example.kotlinsecurity.member.entity
 
 import com.example.kotlinsecurity.common.status.Gender
+import com.example.kotlinsecurity.common.status.Role
 import jakarta.persistence.*
 import java.time.LocalDate
 
@@ -33,4 +34,24 @@ class Member(
     @Column(nullable = false, length = 5)
     @Enumerated(EnumType.STRING)
     val gender: Gender
+) {
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    val memberRole: List<MemberRole>? = null
+}
+
+@Entity
+class MemberRole(
+
+    @Id
+    @GeneratedValue
+    var id: Long? = null,
+
+    @Column(nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
+    val role: Role,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = ForeignKey(name = "fk_member_role_member_id"))
+    val member: Member
 )

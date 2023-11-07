@@ -9,6 +9,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 @EnableWebSecurity
@@ -23,8 +25,10 @@ class SecurityConfig(
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-                it.requestMatchers("/api/member/signup").anonymous()
-                    .anyRequest().permitAll()
+                //it.requestMatchers("/api/member/signup", "/h2-console/*").anonymous().anyRequest().permitAll()
+                it.requestMatchers(
+                    AntPathRequestMatcher("/api/member/signup", "/h2-console/*"))
+                    .anonymous().anyRequest().permitAll() // 3.X부터 어떤 서블렛 쓸 것인지 명시 필요
             }
             .addFilterBefore(
                 JwtAuthenticFilter(jwtTokenProvider),
